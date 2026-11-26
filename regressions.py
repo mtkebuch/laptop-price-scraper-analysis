@@ -12,9 +12,6 @@ df.loc[df["SSD"].astype(str).str.contains("TB", na=False), "SSD_GB"] *= 1024
 
 y = df["Original Price"]
 
-
-
-
 X_linear = df[["SSD_GB"]]
 
 linear_model = LinearRegression()
