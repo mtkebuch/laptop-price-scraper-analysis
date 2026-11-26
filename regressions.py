@@ -1,6 +1,8 @@
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
+from sklearn.model_selection import KFold, cross_val_score
+from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import PolynomialFeatures
 
 # --- Load data ---
@@ -52,8 +54,8 @@ print("RAM coefficient:", multi_model.coef_[1])
 print("Screen Size coefficient:", multi_model.coef_[2])
 print("Intercept:", multi_model.intercept_)
 
-# --- Model comparison ---
-print("\n--- Model Comparison ---")
+# --- Model comparison (in-sample) ---
+print("\n--- Model Comparison (in-sample R²) ---")
 print("Linear Regression:", r2_linear)
 print("Polynomial Regression:", r2_poly)
 print("Multiple Regression:", r2_multi)
@@ -64,4 +66,20 @@ best_model = max(
     (r2_multi, "Multiple Regression"),
 )
 
-print("\nBest Model:", best_model[1], "with R² =", best_model[0])
+print("\nBest Model (in-sample):", best_model[1], "with R² =", best_model[0])
+
+# --- Cross-validation (5-fold) ---
+cv = KFold(n_splits=5, shuffle=True, random_state=42)
+models = {
+    "Linear Regression": (LinearRegression(), X_linear),
+    "Polynomial Regression": (
+        make_pipeline(PolynomialFeatures(degree=2, include_bias=False), LinearRegression()),
+        X_linear,
+    ),
+    "Multiple Regression": (LinearRegression(), X_multi),
+}
+
+print("\n--- Cross-validated R² (5-fold) ---")
+for name, (model, features) in models.items():
+    scores = cross_val_score(model, features, y, cv=cv, scoring="r2")
+    print(f"{name}: {scores.mean():.3f}")
