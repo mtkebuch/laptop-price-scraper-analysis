@@ -1,40 +1,31 @@
-Laptop Price Scraping, Cleaning and Regression Analysis
+# Laptop Price Scraper & Analysis
 
-This project automates the process of collecting laptop data from an e-commerce website, cleaning the extracted dataset, performing statistical analysis, and building multiple regression models to understand the factors affecting laptop prices.
+A Python project that scrapes laptop listings from an e-commerce website, cleans the data, and analyzes which specs affect price using regression models.
 
-Project Structure
+**Data source:** <SITE NAME>
 
-1. Web Scraping (scraping.py)
+## What it does
 
-Uses Selenium and concurrent threading to scrape up to 50 laptop items.
-Extracts product name, current price, original price, discount status, RAM, SSD, and screen size.
-Handles slow-loading pages with WebDriverWait.
-Saves the scraped dataset to ultra_prices_50.xlsx.
+1. **Scraping** (`scraping.py`): Uses Selenium with `ThreadPoolExecutor` to scrape up to 50 laptops in parallel. Extracts name, current price, original price, discount status, RAM, SSD and screen size. Uses `WebDriverWait` for slow-loading pages and skips missing attributes without crashing. Saves raw data to `ultra_prices_50.xlsx`.
+2. **Cleaning & statistics** (`stats_analysis.py`): Normalizes prices, RAM and SSD values, converts GB/TB units, and prints descriptive statistics (mean, median, standard deviation). Saves the result to `clean-data.xlsx`.
+3. **Regression** (`regressions.py`): Compares three models for predicting price, using R² scores:
+   - Linear regression (SSD size)
+   - Multiple linear regression (SSD, RAM, screen size)
+   - Polynomial regression (degree 2)
 
-2. Data Cleaning & Statistics (stats_analysis.py)
+## How to run
 
-Cleans numeric values (prices, RAM, SSD).
-Converts storage units (GB/TB).
-Generates descriptive statistics such as mean, median, and standard deviation.
-Saves the cleaned dataset as clean-data.xlsx.
+Requires Python 3 and Google Chrome.
 
-3. Regression Models (regression.py)
+```bash
+pip install -r requirements.txt
+python scraping.py
+python stats_analysis.py
+python regressions.py
+```
 
-Builds and evaluates several models to estimate laptop prices:
-Linear Regression using SSD size
-Multiple Linear Regression using SSD, RAM, and Screen Size
-Polynomial Regression (degree 2) for capturing non-linear relationships
-Compares model performance using R² scores and identifies the best-performing model.
+Run the scripts in this order: each one uses the output of the previous step.
 
-Features
+## Tech stack
 
-Automated parallel scraping using ThreadPoolExecutor
-Robust error handling for missing product attributes
-Clean preprocessing pipeline for numerical fields
-Statistical summary of the dataset
-Comparison between linear, multiple, and polynomial regression models
-Well-structured code suitable for portfolio presentation
-
-Purpose
-
-This project demonstrates practical skills in web automation, data engineering, and applied machine learning. It is designed as a complete workflow—from data collection to predictive modeling—showcasing both backend scraping logic and analytical capabilities.
+Python, Selenium, pandas, scikit-learn, openpyxl
