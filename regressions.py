@@ -8,9 +8,8 @@ from sklearn.preprocessing import PolynomialFeatures
 # --- Load data ---
 df = pd.read_excel("clean-data.xlsx")
 
-# Convert SSD to GB (TB values are multiplied by 1024)
-df["SSD_GB"] = df["SSD"].astype(str).str.replace("TB", "").astype(float)
-df.loc[df["SSD"].astype(str).str.contains("TB", na=False), "SSD_GB"] *= 1024
+# SSD is already in GB after cleaning (stats_analysis.py)
+df["SSD_GB"] = df["SSD"].astype(float)
 
 y = df["Original Price"]
 
